@@ -2,7 +2,6 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Inicialización de la librería de escaneo
     const html5QrcodeScanner = new Html5QrcodeScanner(
         "reader",
         { 
@@ -14,15 +13,22 @@ document.addEventListener('DOMContentLoaded', () => {
     );
 
     const divMensaje = document.getElementById('mensaje');
+    
+    // Nuestro "semáforo" para evitar que lea el mismo QR 20 veces
+    let puedeEscanear = true; 
 
     function alEscanearConExito(textoDecodificado) {
-        // 1. Pausar la cámara para evitar que lea el mismo código 10 veces en un segundo
-        html5QrcodeScanner.pause();
+        // 1. Si el semáforo está en rojo, ignoramos el escaneo
+        if (!puedeEscanear) return; 
 
-        // 2. Dar retroalimentación visual al auxiliar
+        // 2. Ponemos el semáforo en rojo al instante
+        puedeEscanear = false;
+
+        // 3. Mostramos el mensaje visual
         mostrarMensaje(`✅ DNI: ${textoDecodificado} detectado. Registrando...`, 'exito');
 
-        // 3. TODO: Aquí ejecutaremos el fetch() hacia el Webhook de n8n
+        // 4. Enviamos el dato a n8n en la nube
+        // ⚠️ IMPORTANTE: Reemplaza TU-APP-EN-RENDER con el enlace real de tu n8n
         fetch('http://localhost:5678/webhook-test/registro-asistencia', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -30,26 +36,24 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(response => {
             if (!response.ok) throw new Error("Error en la red");
-            console.log("Asistencia registrada en la base de datos.");
+            console.log("Asistencia registrada con éxito en n8n.");
         })
         .catch(error => {
             console.error("Hubo un problema al registrar:", error);
-            mostrarMensaje("❌ Error al conectar con el servidor.", "error"); 
+            mostrarMensaje("❌ Error al enviar los datos.", "error");
         });
 
-        // 4. Reactivar el sistema automáticamente tras 3 segundos para el siguiente alumno
+        // 5. Volvemos a poner el semáforo en verde después de 3 segundos
         setTimeout(() => {
             ocultarMensaje();
-            html5QrcodeScanner.resume();
+            puedeEscanear = true; 
         }, 3000);
     }
 
     function alFallarEscaneo(mensajeError) {
-        // La librería escupe errores constantemente cuando busca un QR y no lo halla.
-        // Es una buena práctica dejar esto vacío para no colapsar la consola de navegador.
+        // Lo dejamos vacío para que no sature la consola con errores normales de búsqueda
     }
 
-    // Funciones auxiliares para la interfaz
     function mostrarMensaje(texto, clase) {
         divMensaje.textContent = texto;
         divMensaje.className = clase;
