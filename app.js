@@ -23,7 +23,19 @@ document.addEventListener('DOMContentLoaded', () => {
         mostrarMensaje(`✅ DNI: ${textoDecodificado} detectado. Registrando...`, 'exito');
 
         // 3. TODO: Aquí ejecutaremos el fetch() hacia el Webhook de n8n
-        console.log("Dato listo para enviar a la base de datos:", textoDecodificado);
+        fetch('http://localhost:5678/webhook-test/registro-asistencia', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ dni: textoDecodificado })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error("Error en la red");
+            console.log("Asistencia registrada en la base de datos.");
+        })
+        .catch(error => {
+            console.error("Hubo un problema al registrar:", error);
+            mostrarMensaje("❌ Error al conectar con el servidor.", "error"); 
+        });
 
         // 4. Reactivar el sistema automáticamente tras 3 segundos para el siguiente alumno
         setTimeout(() => {
