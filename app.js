@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 4. Enviamos el dato a n8n en la nube
         // ⚠️ IMPORTANTE: Reemplaza TU-APP-EN-RENDER con el enlace real de tu n8n
-        fetch('http://localhost:5678/webhook-test/registro-asistencia', {
+        fetch('https://n8n-cantor-college.onrender.com/webhook-test/registro-asistencia', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ dni: textoDecodificado })
