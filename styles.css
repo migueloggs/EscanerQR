@@ -1,0 +1,84 @@
+/* Definición de variables globales */
+:root {
+    --color-fondo: #f0f2f5;
+    --color-texto-principal: #2c3e50;
+    --color-texto-secundario: #7f8c8d;
+    --color-exito-fondo: #d4edda;
+    --color-exito-texto: #155724;
+    --color-exito-borde: #c3e6cb;
+    --radio-borde: 12px;
+}
+
+/* Reseteo básico y modelo de caja */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background-color: var(--color-fondo);
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.contenedor {
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+header {
+    margin-bottom: 24px;
+}
+
+h1 {
+    font-size: 24px;
+    color: var(--color-texto-principal);
+}
+
+h2 {
+    font-size: 18px;
+    font-weight: normal;
+    color: var(--color-texto-secundario);
+    margin-top: 8px;
+}
+
+/* Contenedor de la cámara */
+#zona-escaner {
+    background: white;
+    padding: 10px;
+    border-radius: var(--radio-borde);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+/* Sobrescribir bordes por defecto de la librería del escáner */
+#reader {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    border: none !important; 
+}
+
+/* Estados del mensaje de retroalimentación */
+#mensaje {
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: opacity 0.3s ease;
+}
+
+.oculto {
+    display: none;
+}
+
+.exito {
+    display: block;
+    background-color: var(--color-exito-fondo);
+    color: var(--color-exito-texto);
+    border: 1px solid var(--color-exito-borde);
+}
